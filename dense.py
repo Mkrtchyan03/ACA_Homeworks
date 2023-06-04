@@ -25,7 +25,6 @@ class DenseLayer:
     def der_relu(self, data):
         return np.where(data > 0, 1, 0)
 
-
     def adam(self, grd_w, grd_b, t, eta=0.001, betta1=0.9, betta2=0.999, eps=1e-8):
         self.m_w = betta1*self.m_w + (1-betta1)*grd_w
         self.m_b = betta1*self.m_b + (1-betta1)*grd_b
@@ -43,8 +42,6 @@ class DenseLayer:
 
     def forward_propagation(self, input_data):
         self.inputs = input_data
-        print(self.inputs.shape)
-        print(self.weights.shape)
         self.output = np.dot(self.inputs, self.weights) + self.bias
         if self.activation == 'sigmoid':
             self.output = self.sigmoid(self.output)
@@ -86,7 +83,7 @@ class DenseNetwork:
 
     def call(self, X_train, y_train, lr, epoch):
         n_sample = X_train.shape[0]
-        loss_history = []
+        
         for i in range(1, epoch+1):
             input = X_train
             err = 0
@@ -100,29 +97,15 @@ class DenseNetwork:
 
             err /= n_sample
             print(f"Epoch {i}, Loss:", err)
-            loss_history.append(err)
-        return np.array(loss_history)
+            
 
-X, y = make_regression(n_samples=5000, n_features=5,n_informative=10 ,random_state=32)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=43)
-y_train, y_test = y_train.reshape(-1,1), y_test.reshape(-1,1)
-input_size = X_train.shape[1]
-fc = DenseNetwork()
-fc.add(DenseLayer(input_size, 128))
-fc.add(DenseLayer(128, 256, activation='sigmoid'))
-fc.add(DenseLayer(256, 70))
-fc.add(DenseLayer(70, 10, activation='relu'))
-fc.add(DenseLayer(10, 1))
-
-h = fc.call(X_train, y_train, 0.01, 60)
-# pred = fc.predict(X_test)
-# print("My predictions:", pred)
-# print("test predictions:", y_test)
-# lr = LinearRegression()
-# lr.fit(X_train, y_train)
-# print(lr.predict(X_test))
-
-plt.plot(h)
-plt.xlim(0, 120)
-plt.ylim(0, 3)
-plt.savefig("loss.png")
+# X, y = make_regression(n_samples=5000, n_features=5,n_informative=10 ,random_state=32)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=43)
+# y_train, y_test = y_train.reshape(-1,1), y_test.reshape(-1,1)
+# input_size = X_train.shape[1]
+# fc = DenseNetwork()
+# fc.add(DenseLayer(input_size, 128))
+# fc.add(DenseLayer(128, 256, activation='sigmoid'))
+# fc.add(DenseLayer(256, 70))
+# fc.add(DenseLayer(70, 10, activation='relu'))
+# fc.add(DenseLayer(10, 1))fc.call(X_train, y_train, 0.01, 60)
